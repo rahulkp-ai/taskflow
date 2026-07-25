@@ -1,0 +1,58 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "MERN Task Manager - Backend Server",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon index.js",
+    "start": "node index.js",
+    "seed": "node seed/seeder.js",
+    "seed:fresh": "cross-env FORCE_RESEED=true node seed/seeder.js",
+    "test": "node --experimental-vm-modules node_modules/.bin/jest --runInBand --forceExit",
+    "test:report": "node --experimental-vm-modules node_modules/.bin/jest --runInBand --forceExit --coverage --reporters=default --reporters=jest-html-reporter"
+  },
+  "author": "TaskManager Team",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "express-async-handler": "^1.2.0",
+    "express-rate-limit": "^7.1.5",
+    "helmet": "^7.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.0.3",
+    "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3",
+    "nodemon": "^3.0.2",
+    "jest": "^29.7.0",
+    "supertest": "^6.3.4",
+    "mongodb-memory-server": "^9.1.6",
+    "jest-html-reporter": "^3.10.2"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "transform": {},
+    "testMatch": [
+      "**/tests/**/*.test.js"
+    ],
+    "coverageDirectory": "coverage",
+    "collectCoverageFrom": [
+      "controllers/**/*.js",
+      "middleware/**/*.js",
+      "models/**/*.js",
+      "utils/**/*.js"
+    ]
+  },
+  "jest-html-reporter": {
+    "pageTitle": "Task Manager API Test Report",
+    "outputPath": "tests/test-report.html",
+    "includeFailureMsg": true,
+    "includeConsoleLog": true
+  }
+}
