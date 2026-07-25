@@ -1,0 +1,58 @@
+# =============================================
+# Dependencies
+# =============================================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+package-lock.json
+yarn.lock
+
+# =============================================
+# Environment Variables
+# =============================================
+.env
+.env.local
+.env.development
+.env.production
+.env.test
+
+# =============================================
+# Build Outputs (Client)
+# =============================================
+client/dist/
+client/build/
+client/coverage/
+client/tests/
+
+# =============================================
+# Build Outputs (Server)
+# =============================================
+server/coverage/
+server/tests/test-report.html
+
+# =============================================
+# IDE & Editor
+# =============================================
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# =============================================
+# OS Files
+# =============================================
+Thumbs.db
+.DS_Store
+ehthumbs.db
+
+# =============================================
+# Logs
+# =============================================
+*.log
+logs/
+npm-debug.log*
+mongodb-memory-server/
