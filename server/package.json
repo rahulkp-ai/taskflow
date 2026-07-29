@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "nodemon index.js",
-    "start": "node index.js",
+    "start": "node seed/seeder.js && node index.js",
     "seed": "node seed/seeder.js",
     "seed:fresh": "cross-env FORCE_RESEED=true node seed/seeder.js",
     "test": "node --experimental-vm-modules node_modules/.bin/jest --runInBand --forceExit",
