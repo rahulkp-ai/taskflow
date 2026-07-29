@@ -1,0 +1,74 @@
+services:
+  mongodb:
+    image: mongo:7.0
+    container_name: tm_mongodb
+    restart: unless-stopped
+    # ⚠️ LOCAL DEVELOPMENT ONLY. These credentials are intentionally simple
+    # and are never used in production. Production deployments use MongoDB
+    # Atlas with a dedicated database user and a secret-managed connection
+    # string (see MONGODB_URI in server/.env.example) — this block is not
+    # read at all in that setup.
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: adminpassword123
+      MONGO_INITDB_DATABASE: taskmanager
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - tm_network
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: tm_server
+    restart: unless-stopped
+    env_file:
+      - ./server/.env
+    environment:
+      - NODE_ENV=development
+      - MONGODB_URI=mongodb://admin:adminpassword123@mongodb:27017/taskmanager?authSource=admin
+      # Set FORCE_RESEED=true to wipe all data and re-seed on next restart
+      - FORCE_RESEED=false
+    ports:
+      - "5001:5000"
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    volumes:
+      - ./server:/app
+      - /app/node_modules
+    networks:
+      - tm_network
+
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: tm_client
+    restart: unless-stopped
+    env_file:
+      - ./client/.env
+    ports:
+      - "3000:3000"
+    depends_on:
+      - server
+    volumes:
+      - ./client:/app
+      - /app/node_modules
+    networks:
+      - tm_network
+
+volumes:
+  mongo_data:
+
+networks:
+  tm_network:
+    driver: bridge
