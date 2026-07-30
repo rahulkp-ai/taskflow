@@ -8,6 +8,7 @@
 ![Docker](https://img.shields.io/badge/Docker-Compose-blue?logo=docker&logoColor=white)
 ![License: ISC](https://img.shields.io/badge/License-ISC-blue.svg)
 [![CI](https://github.com/rahulkp-ai/TaskFlow/actions/workflows/ci.yml/badge.svg)](https://github.com/rahulkp-ai/TaskFlow/actions/workflows/ci.yml)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-taskflow--rahul--kp.vercel.app-6366f1?logo=vercel&logoColor=white)](https://taskflow-rahul-kp.vercel.app)
 
 <!-- Update the org/repo path above if you push this under a different repository name. -->
 
@@ -21,6 +22,7 @@
 
 ## Table of Contents
 
+- [Live Demo](#live-demo)
 - [Tech Stack](#tech-stack)
 - [Key Features](#key-features)
 - [Architecture Overview](#architecture-overview)
@@ -28,6 +30,27 @@
 - [API Endpoints](#api-endpoints)
 - [Usage Examples](#usage-examples)
 - [Deployment](#deployment)
+
+---
+
+## Live Demo
+
+|                  |                                                                                        |
+| ---------------- | -------------------------------------------------------------------------------------- |
+| **Frontend**     | [taskflow-rahul-kp.vercel.app](https://taskflow-rahul-kp.vercel.app)                   |
+| **Backend API**  | [taskflow-api-39g8.onrender.com](https://taskflow-api-39g8.onrender.com)               |
+| **Health check** | [taskflow-api-39g8.onrender.com/health](https://taskflow-api-39g8.onrender.com/health) |
+
+Sign in with any of the seed accounts below (full list under [Seed Credentials](#seed-credentials-auto-seeded)):
+
+```
+Email:    admin@taskflow.com
+Password: Admin@123
+```
+
+> **Note:** the API runs on Render's free tier, which spins down after inactivity. The first request after idle time can take 30–60s to wake up — subsequent requests are fast. This is expected on a $0 deployment, not a bug.
+
+<p align="right"><a href="#top">back to top</a></p>
 
 ---
 
@@ -391,20 +414,30 @@ docker-compose down -v
 
 ### Production Deployment
 
-For production, deploy each tier independently:
+The [live demo](#live-demo) above runs on this exact zero-cost stack:
 
-1. **Frontend** — Build with `cd client && npm run build`, then deploy the `dist/` folder to Vercel, Netlify, or any static host.
-2. **Backend** — Deploy `server/` to Railway, Render, Fly.io, or a VPS. Set `NODE_ENV=production` and use a production MongoDB Atlas URI.
-3. **Database** — Use [MongoDB Atlas](https://cloud.mongodb.com) (M0 free tier available). Whitelist your server's IP and update `MONGODB_URI` in the server environment.
+| Tier         | Service                                                   | Notes                                                                                                                                                                                                                                                 |
+| ------------ | --------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Frontend** | [Vercel](https://vercel.com) (free Hobby tier)            | Root directory `client`, build command `npm run build`, output `dist`. `client/vercel.json` adds a SPA fallback rewrite so client-side routes (`react-router-dom`) don't 404 on refresh.                                                              |
+| **Backend**  | [Render](https://render.com) (free Web Service)           | Root directory `server`, build command `npm install`, start command `npm start`. `npm start` runs the seeder before booting the server (idempotent — safe on every restart) so the database is populated without relying on Docker's `entrypoint.sh`. |
+| **Database** | [MongoDB Atlas](https://cloud.mongodb.com) (M0 free tier) | Network access set to allow all IPs (`0.0.0.0/0`), since Render's free-tier egress IPs aren't static.                                                                                                                                                 |
+
+To deploy your own copy, replicate this exactly:
+
+1. **Frontend** — Import the repo into Vercel with Root Directory `client`. Set `VITE_API_URL` to your backend's URL.
+2. **Backend** — Create a Render Web Service with Root Directory `server`, build command `npm install`, start command `npm start`. Set `MONGODB_URI`, `JWT_SECRET`, `CLIENT_ORIGIN` (your Vercel URL), and `NODE_ENV=production`.
+3. **Database** — Create a free M0 cluster on MongoDB Atlas, add a database user, and allow network access from anywhere.
+
+If you'd rather self-host on a VPS or another platform, Railway, Fly.io, and Docker Compose on any host all work too — the environment variables are the same regardless of host.
 
 **Production environment checklist:**
 
 - [ ] Generate a strong `JWT_SECRET` (64+ chars)
 - [ ] Set `NODE_ENV=production` (enforces `secure: true` cookies and hides stack traces)
-- [ ] Configure `CLIENT_ORIGIN` to your deployed frontend URL
+- [ ] Configure `CLIENT_ORIGIN` to your deployed frontend URL exactly (no trailing slash) — a mismatch here causes CORS-rejected logins
 - [ ] Use MongoDB Atlas instead of local MongoDB
-- [ ] Remove or disable the seed entrypoint in `Dockerfile` / `entrypoint.sh`
-- [ ] Enable HTTPS for both frontend and API
+- [ ] Enable HTTPS for both frontend and API (automatic on Vercel/Render)
+- [ ] If deploying to a native Node host (Render, Railway) rather than Docker, confirm your start command actually runs the seeder — `entrypoint.sh` only executes inside the Docker container
 
 ## Contributing
 
