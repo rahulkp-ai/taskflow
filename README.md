@@ -37,18 +37,20 @@
 
 |                  |                                                                                        |
 | ---------------- | -------------------------------------------------------------------------------------- |
-| **Frontend**     | [taskflow-rahul-kp.vercel.app](https://taskflow-rahul-kp.vercel.app)                   |
+| **Frontend**     | https://taskflow-iota-ecru.vercel.app/log-in                  |
 | **Backend API**  | [taskflow-api-39g8.onrender.com](https://taskflow-api-39g8.onrender.com)               |
 | **Health check** | [taskflow-api-39g8.onrender.com/health](https://taskflow-api-39g8.onrender.com/health) |
 
 Sign in with any of the seed accounts below (full list under [Seed Credentials](#seed-credentials-auto-seeded)):
-
 ```
 Email:    admin@taskflow.com
 Password: Admin@123
 ```
 
 > **Note:** the API runs on Render's free tier, which spins down after inactivity. The first request after idle time can take 30–60s to wake up — subsequent requests are fast. This is expected on a $0 deployment, not a bug.
+
+> **⚠️ Note:** This project is deployed entirely on **free-tier hosting** (Vercel + Render). Because of this, the application may run a bit slower than a production deployment. The backend API runs on Render's free tier, which automatically spins down after inactivity. The first request after the service has been idle can take **30–60 seconds** to wake up, while subsequent requests are much faster. This behavior is expected on a zero-cost deployment and is **not a bug**.
+
 
 <p align="right"><a href="#top">back to top</a></p>
 
